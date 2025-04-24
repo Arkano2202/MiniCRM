@@ -1,0 +1,254 @@
+/* main.css - Global styles */
+:root {
+  --primary-color: #443C5C;
+  --secondary-color: #F27D72;
+  --secondary-color-light: #F2A3A0;
+  --text-color: #333;
+  --bg-color: #f5f5f5;
+  --border-color: #ddd;
+  --success-color: #4CAF50;
+  --warning-color: #FFC107;
+  --danger-color: #F44336;
+  --white-color: #fff;
+  --black-color: #000;
+  --light-gray-color: #dbd9d9;
+  --success-color: #4CAF50;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.container {
+  width: 100%;
+  /* max-width: 1600px; */
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+a {
+  color: var(--secondary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: var(--secondary-color-light);
+  transition: all 0.3s ease;
+}
+
+.page-title {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-between {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.header {
+  background-color: var(--primary-color);
+  padding: 1rem 0rem;
+  color: white;
+  /* margin-bottom: 1.5rem; */
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  color: white;
+  /* font-size: 2rem; */
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-nav {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li.nav-item {
+  display: inline;
+  list-style: none !important;
+  a {
+    text-decoration: none;
+  }
+}
+
+.card {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  /* border: 1px solid var(--border-color); */
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.card label {
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.card select {
+  min-width: 200px;
+}
+
+.sorting_1 {
+  vertical-align: middle;
+}
+
+.sorting {
+  vertical-align: middle;
+}
+
+.sorting_disabled,.sorting_asc {
+  vertical-align: middle;
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.table-striped {
+  background-color: var(--bg-color);
+}
+
+.table-striped tr:nth-child(even) {
+  background-color: var(--white-color);
+}
+
+th {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: bold;
+}
+
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"] {
+  width: min-content;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  color: var(--text-color);
+  background-color: var(--white-color);
+  outline: none;
+}
+
+input[type="file"] {
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  color: var(--text-color);
+  background-color: var(--white-color);
+  outline: none;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: var(--secondary-color);
+  transition: all 0.3s ease;
+}
+
+.sm {
+  height: 100%;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .action-buttons {
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+  
+  .card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .card select {
+    width: 100%;
+  }
+}

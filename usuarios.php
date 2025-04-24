@@ -100,39 +100,34 @@ while ($row = $result_grupos->fetch_assoc()) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Usuarios</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/components/buttons.css">
+    <link rel="stylesheet" href="./css/pages/usuarios.css">
     <style>
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
-        th, td {
+
+        th,
+        td {
             padding: 8px;
             text-align: left;
         }
+
         .toggle-password {
             cursor: pointer;
-        }
-        .volver-button {
-            display: block;
-            margin: 50px auto;
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 16px;
-        }
-        .volver-button:hover {
-            background-color: #0056b3;
         }
     </style>
     <script>
@@ -163,90 +158,128 @@ while ($row = $result_grupos->fetch_assoc()) {
         }
     </script>
 </head>
+
 <body>
-    <h1>Gestión de Usuarios</h1>
+    <header class="header">
+        <nav class="dashboard-header container">
+            <h1 class="title">Gestión de Usuarios</h1>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="dashboard.php">Inicio</a></li>
+                <li class="nav-item"><a href="usuarios.php">Usuarios</a></li>
+                <li class="nav-item"><a href="calendario.php">Calendario</a></li>
+ 
+            </ul>
+            <button class="btn btn-danger" onclick="confirmLogout()">Salir</a></button>
+        </nav>
+    </header>
+    <div class="container">
 
-    <!-- Formulario de creación de usuario -->
-    <button class="volver-button" onclick="location.href='dashboard.php';">Volver</button>
-    <form method="POST" action="">
-        <input type="hidden" name="accion" value="crear">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required><br>
+        <!-- Formulario de creación de usuario -->
+        <form class="user-form" method="POST" action="">
+            <input type="hidden" name="accion" value="crear">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required><br>
+            </div>
+            <div class="form-group">
+                <label for="usuario">Usuario:</label>
+                <input type="text" id="usuario" name="usuario" required><br>
+            </div>
 
-        <label for="usuario">Usuario:</label>
-        <input type="text" id="usuario" name="usuario" required><br>
+            <div class="form-group">
+                <label for="contraseña">Contraseña:</label>
+                <input type="password" id="contraseña" name="contraseña" required>
+                <button class="btn sm btn-primary" type="button"
+                    onclick="togglePassword('contraseña', this)">Mostrar</button><br>
+            </div>
 
-        <label for="contraseña">Contraseña:</label>
-        <input type="password" id="contraseña" name="contraseña" required>
-        <button type="button" onclick="togglePassword('contraseña', this)">Mostrar</button><br>
+            <div class="form-group">
+                <label for="ext">Extensión:</label>
+                <input type="text" id="ext" name="ext" required><br>
+            </div>
 
-        <label for="ext">Extensión:</label>
-        <input type="text" id="ext" name="ext" required><br>
+            <div class="form-group">
+                <label for="tipo">Tipo:</label>
+                <select class="btn btn-light sm" id="tipo" name="tipo" required>
+                    <?php foreach ($grupos as $grupo): ?>
+                        <option value="<?php echo $grupo['id']; ?>">
+                            <?php echo htmlspecialchars($grupo['grupo']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select><br>
+            </div>
+            <button class="btn btn-primary" type="submit">Crear Usuario</button>
+        </form>
 
-        <label for="tipo">Tipo:</label>
-        <select id="tipo" name="tipo" required>
-            <?php foreach ($grupos as $grupo): ?>
-                <option value="<?php echo $grupo['id']; ?>">
-                    <?php echo htmlspecialchars($grupo['grupo']); ?>
-                </option>
-            <?php endforeach; ?>
-        </select><br>
-
-        <button type="submit">Crear Usuario</button>
-    </form>
-
-    <!-- Listado de usuarios -->
-    <h2>Listado de Usuarios</h2>
-    <?php if ($result->num_rows > 0): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Usuario</th>
-                    <th>Contraseña</th>
-                    <th>Extensión</th>
-                    <th>Tipo</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($row['nombre']); ?></td>
-                        <td><?php echo htmlspecialchars($row['usuario']); ?></td>
-                        <td>
-                            <input type="password" id="contraseña_<?php echo $row['id']; ?>" name="contraseña" value="<?php echo htmlspecialchars($row['contraseña']); ?>" readonly>
-                            <button type="button" onclick="togglePassword('contraseña_<?php echo $row['id']; ?>', this)">Mostrar</button>
-                        </td>
-                        <td>
-                            <input type="text" id="ext_<?php echo $row['id']; ?>" name="ext" value="<?php echo htmlspecialchars($row['ext']); ?>" readonly>
-                        </td>
-                        <td>
-                            <select id="tipo_<?php echo $row['id']; ?>" name="tipo" disabled>
-                                <?php foreach ($grupos as $grupo): ?>
-                                    <option value="<?php echo $grupo['id']; ?>" <?php echo $grupo['id'] == $row['tipo_id'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($grupo['grupo']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </td>
-                        <td>
-                            <form method="POST" action="" style="display:inline;">
-                                <input type="hidden" name="accion" value="modificar">
-                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                <input type="hidden" name="contraseña" value="">
-                                <input type="hidden" name="ext" value="">
-                                <input type="hidden" name="tipo" value="">
-                                <button type="button" onclick="enableEditing('<?php echo $row['id']; ?>')">Editar</button>
-                                <button type="button" onclick="prepareAndSubmit('<?php echo $row['id']; ?>', this)">Guardar</button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <p>No hay usuarios disponibles para mostrar.</p>
-    <?php endif; ?>
+        <!-- Listado de usuarios -->
+        <h2>Listado de Usuarios</h2>
+        <div class="card">
+            <?php if ($result->num_rows > 0): ?>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Usuario</th>
+                            <th>Contraseña</th>
+                            <th>Extensión</th>
+                            <th>Tipo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($row['nombre']); ?></td>
+                                <td><?php echo htmlspecialchars($row['usuario']); ?></td>
+                                <td>
+                                    <input type="password" id="contraseña_<?php echo $row['id']; ?>" name="contraseña"
+                                        value="<?php echo htmlspecialchars($row['contraseña']); ?>" readonly>
+                                    <button class="btn sm btn-primary" type="button"
+                                        onclick="togglePassword('contraseña_<?php echo $row['id']; ?>', this)">Mostrar</button>
+                                </td>
+                                <td>
+                                    <input type="text" id="ext_<?php echo $row['id']; ?>" name="ext"
+                                        value="<?php echo htmlspecialchars($row['ext']); ?>" readonly>
+                                </td>
+                                <td>
+                                    <select class="btn btn-light sm" id="tipo_<?php echo $row['id']; ?>" name="tipo" disabled>
+                                        <?php foreach ($grupos as $grupo): ?>
+                                            <option value="<?php echo $grupo['id']; ?>" <?php echo $grupo['id'] == $row['tipo_id'] ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($grupo['grupo']); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <form method="POST" action="" style="display:inline;">
+                                        <input type="hidden" name="accion" value="modificar">
+                                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                        <input type="hidden" name="contraseña" value="">
+                                        <input type="hidden" name="ext" value="">
+                                        <input type="hidden" name="tipo" value="">
+                                        <button class="btn sm btn-outline-primary" type="button"
+                                            onclick="enableEditing('<?php echo $row['id']; ?>')">Editar</button>
+                                        <button class="btn sm btn-primary" type="button"
+                                            onclick="prepareAndSubmit('<?php echo $row['id']; ?>', this)">Guardar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>No hay usuarios disponibles para mostrar.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+    <script>
+        // Función para confirmar el cierre de sesión
+        function confirmLogout() {
+            if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+                window.location.href = "logout.php"; // Redirigir a la página de cierre de sesión
+            }
+        }
+    </script>
 </body>
+
 </html>

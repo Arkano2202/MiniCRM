@@ -1,0 +1,96 @@
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid var(--border-color);
+}
+
+table thead th {
+  vertical-align: bottom;
+  border-bottom: 2px solid var(--border-color);
+  background-color: var(--primary-color);
+  color: white;
+  text-align: left;
+}
+
+table tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+
+/* DataTables specific styling */
+.dataTables_wrapper {
+  padding: 1rem 0;
+}
+
+.dataTables_length,
+.dataTables_filter {
+  margin-bottom: 1rem;
+}
+
+.dataTables_info,
+.dataTables_paginate {
+  margin-top: 1rem;
+}
+
+.dataTables_paginate .paginate_button {
+  padding: 0.3rem 0.6rem;
+  margin-left: 0.2rem;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+}
+
+.dataTables_paginate .paginate_button.current {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.dataTables_paginate .paginate_button:hover:not(.current) {
+  background-color: #f1f1f1;
+}
+
+/* Custom checkbox styling */
+.select-checkbox {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  appearance: none;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.select-checkbox:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.select-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+}
