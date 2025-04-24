@@ -28,7 +28,15 @@ $eventos = [];
 $colores = []; // Mapeo usuario_id => color
 
 // Lista de colores predefinidos
-$coloresDisponibles = ['#3498db', '#f1c40f', '#2ecc71', '#9b59b6', '#e67e22', '#e74c3c', '#1abc9c', '#34495e', '#7f8c8d', '#16a085'];
+$coloresDisponibles = [
+    '#1abc9c', '#16a085', '#2ecc71', '#27ae60', '#3498db', '#2980b9', '#9b59b6', '#8e44ad',
+    '#34495e', '#2c3e50', '#f1c40f', '#f39c12', '#e67e22', '#d35400', '#e74c3c', '#c0392b',
+    '#ecf0f1', '#bdc3c7', '#95a5a6', '#7f8c8d', '#ff5733', '#33ff57', '#5733ff', '#33d1ff',
+    '#ff33a6', '#a633ff', '#33ffbd', '#ffbd33', '#3366ff', '#66ff33', '#ff3366', '#6f42c1',
+    '#fd7e14', '#20c997', '#ffc107', '#6c757d', '#17a2b8', '#6610f2', '#dc3545', '#28a745',
+    '#007bff', '#6f42c1', '#e83e8c', '#343a40', '#adb5bd', '#198754', '#0dcaf0', '#fdc500',
+    '#a3e635', '#f87171'
+];
 $coloresUsados = [];
 
 function generarColorHex() {
@@ -63,10 +71,15 @@ while ($row = $result->fetch_assoc()) {
         $nombresUsuarios[$usuario_id] = $usuarioNombre;
     }
 
+    $inicio = $row['fecha'] . 'T' . $row['hora'];
+    $duracionMinutos = 30; // o la duración real si la tienes
+    $fin = date('Y-m-d\TH:i:s', strtotime("+$duracionMinutos minutes", strtotime($inicio)));
+
     $eventos[] = [
         'id' => $row['id'],
         'title' => $row['titulo'],
-        'start' => $row['fecha'] . 'T' . $row['hora'], // Sin offset
+        'start' => $inicio,
+        'end' => $fin,
         'description' => $row['descripcion'],
         'notificado' => $row['notificado'],
         'usuario_id' => $usuario_id,

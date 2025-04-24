@@ -18,61 +18,6 @@ $usuario = $_SESSION['usuario_usuario'];
 $tipo_usuario = $_SESSION['usuario_tipo']; // Asegúrate de guardar el tipo al momento de hacer login
 $busqueda = isset($_GET['busqueda']) ? trim($_GET['busqueda']) : '';
 
-/*var_dump($tipo_usuario);
-exit;
-
-$sql = "
-    SELECT c.*, n.UltimaGestion, n.FechaUltimaGestion
-    FROM clientes c
-    LEFT JOIN (
-        SELECT TP, UltimaGestion, FechaUltimaGestion
-        FROM notas
-        WHERE (TP, FechaUltimaGestion) IN (
-            SELECT TP, MAX(FechaUltimaGestion)
-            FROM notas
-            GROUP BY TP
-        )
-    ) n ON c.TP = n.TP
-";
-
-// Aplica filtros según el tipo de usuario
-if ($tipo_usuario == 2 || $tipo_usuario == 4) {
-    $sql .= " WHERE c.grupo = 'FTD'";
-} elseif ($tipo_usuario == 3 || $tipo_usuario == 5) {
-    $sql .= " WHERE c.grupo = 'Rete'";
-}
-
-$sql .= " LIMIT $registros_por_pagina OFFSET $offset";
-
-$resultado = mysqli_query($conn, $sql);
-
-$total_query = "SELECT COUNT(*) AS total FROM clientes";
-if ($_SESSION['usuario_tipo'] == 2 || $_SESSION['usuario_tipo'] == 4) {
-    $total_query .= " WHERE grupo = 'FTD'";
-} elseif ($_SESSION['usuario_tipo'] == 3 || $_SESSION['usuario_tipo'] == 5) {
-    $total_query .= " WHERE grupo = 'Rete'";
-}
-
-// Agregar búsqueda
-if (!empty($busqueda)) {
-    $search = " (clientes.Nombre LIKE '%$busqueda%' OR 
-                 clientes.Apellido LIKE '%$busqueda%' OR 
-                 clientes.Correo LIKE '%$busqueda%' OR 
-                 clientes.Numero LIKE '%$busqueda%' OR 
-                 clientes.Pais LIKE '%$busqueda%' OR 
-                 clientes.TP LIKE '%$busqueda%' OR 
-                 clientes.Campaña LIKE '%$busqueda%' OR 
-                 clientes.Grupo LIKE '%$busqueda%')";
-
-    $where .= ($where ? " AND " : " WHERE ") . $search;
-}
-
-$total_result = mysqli_query($conn, $total_query);
-$total_fila = mysqli_fetch_assoc($total_result);
-$total_clientes = $total_fila['total'];
-$total_paginas = ceil($total_clientes / $registros_por_pagina);
-*/
-
 // Consulta para obtener los nombres de los usuarios
 $query_users = "SELECT id, nombre FROM users";
 $result_users = $conn->query($query_users);

@@ -7,6 +7,15 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
+    <!--Elmininar-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Citas</title>
+    <!-- Incluye los archivos de CSS necesarios (por ejemplo, de FullCalendar) -->
+    <link rel="stylesheet" href="path/to/fullcalendar.min.css">
+    <!--Elmininar-->
+
     <meta charset="UTF-8">
     <title>Calendario de Citas</title>
 
@@ -41,6 +50,7 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
             border: 1px solid #888;
             width: 50%; /* Puedes ajustar el tamaño */
             border-radius: 10px;
+            font-size: 18px; /* Tamaño de fuente más grande */
         }
 
         .close {
@@ -91,6 +101,52 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
         .btn.eliminar {
             background-color: #f44336;
         }
+
+        .enlace-bonito {
+            color: #2196F3;
+            text-decoration: none;
+            font-weight: bold;
+            word-break: break-word;
+        }
+
+        .enlace-bonito:hover {
+            text-decoration: underline;
+        }
+
+        #descripcionHTML {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+        }
+
+        #descripcionHTML a.enlace-bonito {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        #descripcionHTML a.enlace-bonito:hover {
+            text-decoration: underline;
+        }
+
+        .contenedor-citas {
+            max-height: 300px; /* Altura máxima de la celda */
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .cita {
+            margin-bottom: 4px;
+            padding: 2px 5px;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+
     </style>
 
 </head>
@@ -108,8 +164,9 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
         <form id="formCita">
             <label>Título:</label>
             <input type="text" id="titulo" required><br><br>
-            <label>Descripción:</label>
+            <label>Link Cliente:</label>
             <textarea id="descripcion"></textarea><br><br>
+            <div id="descripcionHTML" style="margin-top: 10px;"></div>
             <label>Fecha y Hora:</label>
             <input type="datetime-local" id="fecha_hora" required><br><br>
             <input type="submit" class="btn" value="Guardar Cita">
@@ -156,11 +213,6 @@ function generarLeyendaUsuarios(eventos) {
     });
 }
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-
-
-
-
 
 function yaFueNotificado(id) {
     return localStorage.getItem("notificado_" + id) === "true";
@@ -237,15 +289,9 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
     }
-
     // Ejecutar verificación cada minuto
     setInterval(verificarNotificaciones, 60000);
 });
-
-
-
-
-
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 document.addEventListener("DOMContentLoaded", function () {
@@ -314,13 +360,68 @@ $(document).ready(function() {
                 alert('Error al cargar las citas');
             }
         },
+        eventLimit: true, // activa el "mostrar más"
+        eventLimitText: "más", // texto personalizado
         selectable: true,
+        viewRender: function(view, element) {
+            $(".fc-day-grid-event").css({
+                "white-space": "normal"
+            });
+
+            $(".fc-day").css({
+                "max-height": "120px",
+                "overflow-y": "auto"
+            });
+        },
+
+        //Eliminar
+        eventRender: function(event, element) {
+                    element.hover(
+                        function(e) {
+                            const tooltip = $('<div class="tooltip"></div>')
+                                .html(
+                                    `<strong>Cita:</strong> ${event.title}<br>
+                                    <strong>Hora:</strong> ${moment(event.start).format('HH:mm')}<br>
+                                    <strong>Usuario:</strong> ${event.usuario_nombre}`
+                                )
+                                .css({
+                                    position: 'absolute',
+                                    background: 'rgba(0, 0, 0, 0.85)',
+                                    color: '#fff',
+                                    padding: '12px',
+                                    borderRadius: '8px',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                    zIndex: 1000,
+                                    pointerEvents: 'none',
+                                    boxShadow: '0 0 10px rgba(0,0,0,0.5)'
+                                })
+                                .appendTo('body')
+                                .fadeIn('slow');
+
+                            $(this).on('mousemove.tooltip', function(e) {
+                                tooltip.css({
+                                    top: e.pageY - tooltip.outerHeight() - 10,
+                                    left: e.pageX + 10
+                                });
+                            });
+                        },
+                        function() {
+                            $('.tooltip').remove();
+                            $(this).off('mousemove.tooltip');
+                        }
+                    );
+                },
+        //Eliminar
+
         select: function(start, end) {
             // Mostrar el modal con la fecha seleccionada
             $('#modalCita').show();
             $('#fecha_hora').val(moment(start).toISOString().slice(0, 16)); // Corregido aquí
             $('#titulo').val(''); // Limpiar los campos
             $('#descripcion').val('');
+            $('#descripcionHTML').hide(); // Oculta el div con HTML (por si venías de otra cita)
+            $('#descripcion').show();     // Muestra el textarea para escribir nueva cita
 
             // Cerrar el modal al hacer clic en la 'X'
             $('.close').click(function() {
@@ -336,7 +437,17 @@ $(document).ready(function() {
             // Mostrar los datos de la cita seleccionada en el modal
             $('#modalCita').show();
             $('#titulo').val(event.title); // Asignar el título de la cita
-            $('#descripcion').val(event.description); // Asignar la descripción
+            //$('#descripcion').val(event.description); // Asignar la descripción
+
+            $('#descripcion').val(event.description); // para edición
+            // Convertir URLs en la descripción en enlaces
+            function enlazarTexto(texto) {
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                return texto.replace(urlRegex, url => `<a href="${url}" target="_blank" class="enlace-bonito">${url}</a>`);
+            }
+
+            $('#descripcionHTML').html(enlazarTexto(event.description)).show();
+            $('#descripcion').hide(); // oculta el textarea mientras se visualiza
             $('#fecha_hora').val(moment(event.start).toISOString().slice(0, 16)); // Asignar la fecha y hora
 
             // Mostrar los botones de acción (actualizar y eliminar)
