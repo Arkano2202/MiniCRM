@@ -1,134 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components/buttons.css">
+    <link rel="stylesheet" href="css/pages/formulario_cliente.css">
     <title>Formulario Cliente</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding-top: 50px; /* Espacio adicional */
-            height: 100vh;
-            flex-direction: column;
-        }
-
-        h1 {
-            text-align: center;
-            color: #4a4a8c;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        td {
-            padding: 10px;
-        }
-
-        .form-table {
-            width: 100%;
-        }
-
-        .form-table td {
-            vertical-align: top;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 5px;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            background-color: #4a4a8c;
-            color: #fff;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #3a3a6c;
-        }
-
-        textarea {
-            resize: none;
-        }
-
-        .table-container {
-            width: 100%;
-            max-width: 800px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .table-container h1 {
-            margin-bottom: 20px;
-        }
-
-        .notes-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-        }
-
-        .notes-table th, .notes-table td {
-            border: 1px solid #ccc;
-            padding: 10px;
-        }
-
-        .notes-table th {
-            background-color: #4a4a8c;
-            color: #fff;
-        }
-
-        .notes-table td {
-            background-color: #f9f9f9;
-        }
-    </style>
     <script>
         function validarFormulario(event) {
             const estado = document.getElementById('estado').value;
@@ -150,11 +29,12 @@
         }
     </script>
 </head>
+
 <body>
     <?php
     session_start(); // Iniciar la sesión
     include 'conexion.php'; // Asegúrate de tener una conexión a la base de datos
-
+    
     // Obtener el parámetro "tp" de la URL
     $tp_cliente = isset($_GET['tp']) ? $_GET['tp'] : '';
 
@@ -183,9 +63,10 @@
 
     // Obtener el tipo de usuario
     $tipo_usuario = $_SESSION['usuario_tipo'];
-    
+
     // Funciones para ocultar datos
-    function ocultar_dato($dato) {
+    function ocultar_dato($dato)
+    {
         return str_repeat('*', strlen($dato));
     }
 
@@ -212,19 +93,31 @@
     $query_notas->execute();
     $resultado_notas = $query_notas->get_result();
     ?>
-
-    <div class="container">
+    <header class="header mb-4">
+        <nav class="dashboard-header container">
+            <h1 class="title">Gestión de Usuarios</h1>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="dashboard.php">Inicio</a></li>
+                <li class="nav-item"><a href="usuarios.php">Usuarios</a></li>
+                <li class="nav-item"><a href="calendario.php">Calendario</a></li>
+            </ul>
+            <button class="btn btn-danger" onclick="confirmLogout()">Salir</a></button>
+        </nav>
+    </header>
+    <div class="container center">
         <form action="procesar_cliente.php" method="POST" onsubmit="return validarFormulario(event)">
             <h1>Formulario del Cliente</h1>
             <table class="form-table">
                 <tr>
                     <td>
                         <label for="nombre">Nombre:</label>
-                        <input type="text" id="nombre" name="nombre" value="<?php echo $cliente['Nombre'] ?? ''; ?>" readonly>
+                        <input type="text" id="nombre" name="nombre" value="<?php echo $cliente['Nombre'] ?? ''; ?>"
+                            readonly>
                     </td>
                     <td>
                         <label for="apellido">Apellido:</label>
-                        <input type="text" id="apellido" name="apellido" value="<?php echo $cliente['Apellido'] ?? ''; ?>" readonly>
+                        <input type="text" id="apellido" name="apellido"
+                            value="<?php echo $cliente['Apellido'] ?? ''; ?>" readonly>
                     </td>
                 </tr>
                 <tr>
@@ -243,10 +136,9 @@
                         <input type="text" id="pais" name="pais" value="<?php echo $cliente['Pais'] ?? ''; ?>" readonly>
                     </td>
                     <td>
-                    <label for="telefono">Teléfono:</label>
-                    <a href="#" class="llamar" data-numero="<?php echo htmlspecialchars($numero_sin_filtro); ?>" 
-                    id="telefono" 
-                    style="
+                        <label for="telefono">Teléfono:</label>
+                        <a href="#" class="llamar" data-numero="<?php echo htmlspecialchars($numero_sin_filtro); ?>"
+                            id="telefono" style="
                         display: inline-block; 
                         padding: 8px 10px; 
                         border: 1px solid #ccc; 
@@ -257,14 +149,15 @@
                         font-size: 14px; 
                         box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
                     ">
-                    <?php echo $numero_mostrado; ?>
-                    </a>
+                            <?php echo $numero_mostrado; ?>
+                        </a>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
                         <label for="notas">Observaciones:</label>
-                        <textarea id="notas" name="notas" maxlength="1000" placeholder="Escribe tus observaciones aquí..."></textarea>
+                        <textarea id="notas" name="notas" maxlength="1000"
+                            placeholder="Escribe tus observaciones aquí..."></textarea>
                     </td>
                 </tr>
                 <tr>
@@ -282,7 +175,7 @@
                 </tr>
             </table>
             <input type="hidden" name="tp_cliente" value="<?php echo $tp_cliente; ?>">
-            <button type="submit">Guardar</button>
+            <button class="btn btn-primary sm" type="submit">Guardar</button>
         </form>
 
         <div class="table-container">
@@ -310,26 +203,32 @@
         </div>
     </div>
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const botones = document.querySelectorAll(".llamar");
-        botones.forEach(boton => {
-            boton.addEventListener("click", function (e) {
-                e.preventDefault();
+        function confirmLogout() {
+            if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+                window.location.href = "logout.php"; // Redirigir a la página de cierre de sesión
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const botones = document.querySelectorAll(".llamar");
+            botones.forEach(boton => {
+                boton.addEventListener("click", function (e) {
+                    e.preventDefault();
 
-                const numero = this.dataset.numero;
+                    const numero = this.dataset.numero;
 
-                fetch("llamar.php?numero=" + encodeURIComponent(numero))
-                    .then(response => response.text())
-                    .then(data => {
-                        //alert("Llamando al número: " + numero);
-                    })
-                    .catch(error => {
-                        alert("Error al realizar la llamada.");
-                        console.error(error);
-                    });
+                    fetch("llamar.php?numero=" + encodeURIComponent(numero))
+                        .then(response => response.text())
+                        .then(data => {
+                            //alert("Llamando al número: " + numero);
+                        })
+                        .catch(error => {
+                            alert("Error al realizar la llamada.");
+                            console.error(error);
+                        });
+                });
             });
         });
-    });
     </script>
 </body>
+
 </html>

@@ -1,0 +1,46 @@
+# Archivos específicos de Composer
+/vendor/
+/composer.phar
+
+# Archivos de configuración local
+.env
+.env.local
+*.env.backup
+
+# Archivos de caché de PHP
+*.php_cs.cache
+
+# Archivos de caché y logs
+/logs/
+/cache/
+debug.log
+*.log
+/.phpunit.result.cache
+
+# Archivos del IDE
+/.idea/
+/.vscode/
+/.phpstorm.meta.php
+/_ide_helper.php
+/_ide_helper_models.php
+
+# Archivos de XAMPP específicos
+/xampp/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración específicos del entorno
+/config/local.php
+/config/dev.php
+
+# Carpetas de almacenamiento
+/storage/
+
+# Archivos de dependencias Node.js (si usas algún frontend con npm/yarn)
+/node_modules/
+/npm-debug.log
+/yarn-error.log
+/package-lock.json
+/yarn.lock
