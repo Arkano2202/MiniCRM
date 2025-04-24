@@ -15,6 +15,7 @@ if (!isset($_SESSION['usuario_usuario']) || empty($_SESSION['usuario_usuario']))
 }
 
 $usuario = $_SESSION['usuario_usuario'];
+$titulo_pagina = "Bienvenido, $usuario";
 $tipo_usuario = $_SESSION['usuario_tipo']; // Asegúrate de guardar el tipo al momento de hacer login
 $busqueda = isset($_GET['busqueda']) ? trim($_GET['busqueda']) : '';
 
@@ -56,27 +57,14 @@ if ($result_users && $result_users->num_rows > 0) {
 </head>
 
 <body>
-    <header class="header">
-        <nav class="dashboard-header container">
-            <h1 class="title">Bienvenido, <?php echo htmlspecialchars($usuario); ?></h1>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a href="dashboard.php">Inicio</a></li>
-                <li class="nav-item"><a href="usuarios.php">Usuarios</a></li>
-                <li class="nav-item"><a href="calendario.php">Calendario</a></li>
-            </ul>
-            <button class="btn btn-danger" onclick="confirmLogout()">Salir</a></button>
-        </nav>
-    </header>
+    <?php include 'includes/header.php'; ?>
     <div class="container">
         <?php if (isset($_SESSION['usuario_tipo']) && $_SESSION['usuario_tipo'] == 1): ?>
             <!--button id="asignedtAll">Asignar Seleccion</button-->
             <div class="actions">
-                <button id="createUser" class="btn btn-primary" onclick="window.location.href='usuarios.php';">Crear
-                    Usuario</button>
                 <button id="deselectAll" class="btn btn-primary">Deseleccionar todo</button>
                 <button id="exportExcel" class="btn btn-primary">Exportar seleccionados</button>
                 <button id="deleteRecords" class="btn btn-danger">Eliminar seleccionados</button>
-                <a href="calendario.php" class="btn btn-primary" target="_blank">📅 Ver Calendario</a>
                 <form class="upload" action="procesar_carga.php" method="post" enctype="multipart/form-data">
                     <input type="file" name="archivo" accept=".csv" required>
                     <button class="btn btn-primary" type="submit" name="submit">Cargar</button>

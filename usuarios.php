@@ -8,6 +8,8 @@ if (!isset($_SESSION['usuario_id'])) {
     die('Usuario no autenticado.');
 }
 
+$titulo_pagina = "Gestión de Usuarios"; // Título de la página
+
 // Procesar el formulario de creación de usuario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['accion'] === 'crear') {
     $nombre = $_POST['nombre'] ?? '';
@@ -160,18 +162,7 @@ while ($row = $result_grupos->fetch_assoc()) {
 </head>
 
 <body>
-    <header class="header">
-        <nav class="dashboard-header container">
-            <h1 class="title">Gestión de Usuarios</h1>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a href="dashboard.php">Inicio</a></li>
-                <li class="nav-item"><a href="usuarios.php">Usuarios</a></li>
-                <li class="nav-item"><a href="calendario.php">Calendario</a></li>
- 
-            </ul>
-            <button class="btn btn-danger" onclick="confirmLogout()">Salir</a></button>
-        </nav>
-    </header>
+    <?php include 'includes/header.php'; ?>
     <div class="container">
 
         <!-- Formulario de creación de usuario -->

@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+$titulo_pagina = 'Calendario de citas';
 $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eventos.php';
 ?>
 
@@ -12,6 +13,7 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components/buttons.css">
+    <link rel="stylesheet" href="css/components/forms.css">
     <link rel="stylesheet" href="css/pages/calendario.css">
     <title>Calendario de Citas</title>
     <!-- Cargar jQuery -->
@@ -24,18 +26,7 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
 </head>
 
 <body>
-
-    <header class="header mb-4">
-        <nav class="dashboard-header container">
-            <h1 class="title">Calendario de citas</h1>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a href="dashboard.php">Inicio</a></li>
-                <li class="nav-item"><a href="usuarios.php">Usuarios</a></li>
-                <li class="nav-item"><a href="clientes.php">Clientes</a></li>
-            </ul>
-            <button class="btn btn-danger" onclick="confirmLogout()">Salir</a></button>
-        </nav>
-    </header>
+    <?php include 'includes/header.php'; ?>
     <div class="container">
 
         <!-- <h2>Calendario de Citas</h2> -->
@@ -48,12 +39,19 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
                 <span class="close">&times;</span>
                 <h3>Detalles de la Cita</h3>
                 <form class="form" id="formCita">
-                    <label>Título:</label>
-                    <input type="text" id="titulo" required><br><br>
-                    <label>Descripción:</label>
-                    <textarea id="descripcion"></textarea><br><br>
-                    <label>Fecha y Hora:</label>
-                    <input type="datetime-local" id="fecha_hora" required><br><br>
+                    <div class="form-group">
+                        <label>Título:</label>
+                        <input type="text" id="titulo" required>
+                    </div>
+                    <div class="form-group flex-column align-start">
+                        <label>Link Cliente:</label>
+                        <textarea id="descripcion"></textarea>
+                        <div id="descripcionHTML" style="margin-top: 10px;"></div>
+                    </div>
+                    <div class="form-group flex-column align-start">
+                        <label>Fecha y Hora:</label>
+                        <input type="datetime-local" id="fecha_hora" required>
+                    </div>
                     <input type="submit" class="btn btn-primary" value="Guardar Cita">
                 </form>
 
