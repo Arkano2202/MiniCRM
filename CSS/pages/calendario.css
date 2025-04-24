@@ -45,6 +45,13 @@
   cursor: pointer;
 }
 
+.actions {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  padding: 1rem 0rem;
+}
+
 /* Asegurarse que el formulario tenga un buen diseño */
 form label {
   font-weight: bold;

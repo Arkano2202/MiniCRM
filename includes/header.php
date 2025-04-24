@@ -18,18 +18,18 @@ $pagina_actual = basename($_SERVER['PHP_SELF']);
 <header class="header">
   <nav class="dashboard-header container">
     <h1 class="title"><?php echo $titulo_pagina ?? 'Dashboard'; ?></h1>
-    <ul class="navbar-nav">
-      <li class="nav-item"><a href="dashboard.php" <?php echo ($pagina_actual == 'dashboard.php') ? 'class="active"' : ''; ?>>Inicio</a></li>
+    <?php if ($pagina_actual == 'dashboard.php' || $pagina_actual == "usuarios.php"): ?>
+      <ul class="navbar-nav">
+        <li class="nav-item"><a href="dashboard.php" <?php echo ($pagina_actual == 'dashboard.php') ? 'class="active"' : ''; ?>>Inicio</a></li>
 
-      <?php if ($tipo_usuario == 1): ?>
-        <!-- Solo mostrar el enlace a usuarios si el usuario es de tipo 1 (administrador) -->
-        <li class="nav-item"><a href="usuarios.php" <?php echo ($pagina_actual == 'usuarios.php') ? 'class="active"' : ''; ?>>Usuarios</a></li>
-      <?php endif; ?>
+        <?php if ($tipo_usuario == 1): ?>
+          <!-- Solo mostrar el enlace a usuarios si el usuario es de tipo 1 (administrador) -->
+          <li class="nav-item"><a href="usuarios.php" <?php echo ($pagina_actual == 'usuarios.php') ? 'class="active"' : ''; ?>>Usuarios</a></li>
+        <?php endif; ?>
 
-      <li class="nav-item"><a href="calendario.php" target="_blank" <?php echo ($pagina_actual == 'calendario.php') ? 'class="active"' : ''; ?>>Calendario</a></li>
-    </ul>
+        <li class="nav-item"><a href="calendario.php" target="_blank" <?php echo ($pagina_actual == 'calendario.php') ? 'class="active"' : ''; ?>>Calendario</a></li>
+      </ul>
 
-    <?php if ($pagina_actual != 'calendario.php'): ?>
       <!-- Mostrar el botón de salir solo si NO estamos en la página calendario.php -->
       <button class="btn btn-danger" onclick="confirmLogout()">Salir</button>
     <?php endif; ?>

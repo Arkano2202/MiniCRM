@@ -49,6 +49,8 @@
         die("Error de conexión: " . $conn->connect_error);
     }
 
+    $titulo_pagina = "Formulario cliente";
+
     // Consultar los datos del cliente usando TP
     $query_cliente = $conn->prepare("SELECT Nombre, Apellido, TP, Correo, Pais, Numero FROM clientes WHERE TP = ?");
     $query_cliente->bind_param("s", $tp_cliente);
@@ -93,17 +95,7 @@
     $query_notas->execute();
     $resultado_notas = $query_notas->get_result();
     ?>
-    <header class="header mb-4">
-        <nav class="dashboard-header container">
-            <h1 class="title">Gestión de Usuarios</h1>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a href="dashboard.php">Inicio</a></li>
-                <li class="nav-item"><a href="usuarios.php">Usuarios</a></li>
-                <li class="nav-item"><a href="calendario.php">Calendario</a></li>
-            </ul>
-            <button class="btn btn-danger" onclick="confirmLogout()">Salir</a></button>
-        </nav>
-    </header>
+    <?php include 'includes/header.php'; ?>
     <div class="container center">
         <form action="procesar_cliente.php" method="POST" onsubmit="return validarFormulario(event)">
             <h1>Formulario del Cliente</h1>

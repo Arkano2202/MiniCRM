@@ -1,3 +1,7 @@
+.header {
+  margin-bottom: 1rem;
+}
+
 .container.center {
   gap: 1rem;
   align-items: flex-start;
