@@ -14,7 +14,7 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 # Configuración
-EXT_ORIGEN = '1020'  # Extensión registrada en MicroSIP
+EXT_ORIGEN = sys.argv[2]  # Se recibe desde PHP
 NUMERO_DESTINO = sys.argv[1]  # Recibir número desde PHP
 CALLERID = 'Anonimo'
 TIMEOUT = 30000

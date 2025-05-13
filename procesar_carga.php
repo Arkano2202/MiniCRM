@@ -40,11 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
 
         fclose($handle);
 
-        $tiempo_fin = microtime(true); // Marca el final
-        $duracion = round($tiempo_fin - $tiempo_inicio, 2); // en segundos
-
-        echo "Carga completada. Registros insertados: $insertados<br>";
-        echo "⏱ Tiempo total: {$duracion} segundos.";
+        header("Location: dashboard.php");
+        exit();
     } else {
         echo "No se pudo abrir el archivo.";
     }

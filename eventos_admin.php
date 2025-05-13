@@ -1,11 +1,12 @@
 <?php
 header('Content-Type: application/json');
 session_start();
+date_default_timezone_set('America/Bogota');
 
 error_log("TIPO DE USUARIO EN SESIÓN: " . print_r($_SESSION['usuario_tipo'], true));
 
 // Verifica si el usuario es de tipo 1 (administrador)
-if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] != 1) {
+if (!isset($_SESSION['usuario_tipo']) || !in_array($_SESSION['usuario_tipo'], [1, 4, 5])) {
     echo json_encode(["error" => "Acceso no autorizado"]);
     exit;
 }
@@ -18,11 +19,60 @@ if ($conn->connect_error) {
     exit;
 }
 
+// ------------------ GUARDAR NUEVA CITA (solo admins) ------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'crear_admin') {
+
+    $usuario_id = intval($_POST['usuario_id']);
+    $titulo = trim($_POST['titulo']);
+    $descripcion = trim($_POST['descripcion']);
+    $fecha_hora = $_POST['fecha_hora']; // Formato: "YYYY-MM-DDTHH:MM"
+
+    // Separar fecha y hora
+    $fecha = date('Y-m-d', strtotime($fecha_hora));
+    $hora = date('H:i:s', strtotime($fecha_hora));
+
+    // Validación básica
+    if (!$usuario_id || !$titulo || !$fecha || !$hora) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Datos incompletos']);
+        exit;
+    }
+
+    $stmt = $conn->prepare("INSERT INTO citas (usuario_id, titulo, descripcion, fecha, hora, notificado) VALUES (?, ?, ?, ?, ?, 0)");
+    $stmt->bind_param("issss", $usuario_id, $titulo, $descripcion, $fecha, $hora);
+
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Error al guardar la cita']);
+    }
+    exit;
+}
+
+$usuario_tipo = $_SESSION['usuario_tipo'];
+$user_id = $_SESSION['usuario_id'];
+
 // Consulta todas las citas
-$sql = "SELECT c.id, c.titulo, c.descripcion, c.fecha, c.hora, c.notificado, c.usuario_id, u.nombre 
-        FROM citas c 
-        JOIN users u ON c.usuario_id = u.id";
-$result = $conn->query($sql);
+if (in_array($usuario_tipo, [4, 5])) {
+    // Mostrar solo citas de usuarios cuyo grupo sea igual al id del usuario logueado
+    $sql = "SELECT c.id, c.titulo, c.descripcion, c.fecha, c.hora, c.notificado, c.usuario_id, u.nombre 
+            FROM citas c 
+            JOIN users u ON c.usuario_id = u.id 
+            WHERE u.grupo = ?";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else {
+    // Tipo 1 (admin) ve todo
+    $sql = "SELECT c.id, c.titulo, c.descripcion, c.fecha, c.hora, c.notificado, c.usuario_id, u.nombre 
+            FROM citas c 
+            JOIN users u ON c.usuario_id = u.id";
+    $result = $conn->query($sql);
+} 
+
 
 $eventos = [];
 $colores = []; // Mapeo usuario_id => color

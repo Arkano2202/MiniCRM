@@ -66,6 +66,15 @@
     // Obtener el tipo de usuario
     $tipo_usuario = $_SESSION['usuario_tipo'];
 
+    // Obtener la extensión del usuario desde la tabla users
+    $user_id = $_SESSION['usuario_id']; // Asegúrate que en la sesión se guarde este ID
+    $query_ext = $conn->prepare("SELECT Ext FROM users WHERE id = ?");
+    $query_ext->bind_param("i", $user_id);
+    $query_ext->execute();
+    $result_ext = $query_ext->get_result();
+    $ext_row = $result_ext->fetch_assoc();
+    $extension_usuario = $ext_row['Ext'] ?? '';
+
     // Funciones para ocultar datos
     function ocultar_dato($dato)
     {
@@ -130,7 +139,8 @@
                     <td>
                         <label for="telefono">Teléfono:</label>
                         <a href="#" class="llamar" data-numero="<?php echo htmlspecialchars($numero_sin_filtro); ?>"
-                            id="telefono" style="
+                        data-ext="<?php echo htmlspecialchars($extension_usuario); ?>"
+                        id="telefono" style="
                         display: inline-block; 
                         padding: 8px 10px; 
                         border: 1px solid #ccc; 
@@ -207,15 +217,15 @@
                     e.preventDefault();
 
                     const numero = this.dataset.numero;
+                    const extension = this.dataset.ext;
 
-                    fetch("llamar.php?numero=" + encodeURIComponent(numero))
+                    fetch("llamar.php?numero=" + encodeURIComponent(numero) + "&ext=" + encodeURIComponent(extension))
                         .then(response => response.text())
                         .then(data => {
-                            //alert("Llamando al número: " + numero);
+                            console.log("Respuesta de llamar.php:", data);
                         })
                         .catch(error => {
-                            alert("Error al realizar la llamada.");
-                            console.error(error);
+                            console.error("Error al llamar:", error);
                         });
                 });
             });

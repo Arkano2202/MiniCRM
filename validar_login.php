@@ -24,7 +24,7 @@ if ($result->num_rows == 1) {
     $_SESSION['usuario_tipo'] = $datos['Tipo'];
 
     echo "Inicio de sesión exitoso";
-    header("refresh:1;url=dashboard.php");
+    header("refresh:0;url=dashboard.php");
     exit(); // importante
 } else {
     header("Location: login.php?error=1");

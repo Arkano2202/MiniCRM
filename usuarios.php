@@ -1,6 +1,13 @@
 <?php
 
 session_start(); // Iniciar la sesión
+
+// Verificar si el usuario tiene tipo 1
+if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] != 1) {
+    header('Location: dashboard.php'); // Redirige a dashboard.php si no tiene tipo 1
+    exit; // Detiene la ejecución del script
+}
+
 include 'conexion.php'; // Asegúrate de tener una conexión a la base de datos
 
 // Verificar si el usuario está autenticado

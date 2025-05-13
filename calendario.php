@@ -2,7 +2,17 @@
 session_start();
 
 $titulo_pagina = 'Calendario de citas';
-$archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eventos.php';
+$archivo_eventos = in_array($_SESSION['usuario_tipo'], [1, 4, 5]) ? 'eventos_admin.php' : 'eventos.php';
+
+// Solo si es admin, cargamos la lista de usuarios
+$usuarios = [];
+if (in_array($_SESSION['usuario_tipo'], [1, 4, 5])) {
+    include 'conexion.php'; // Asegúrate de que este archivo establece la conexión a la BD
+    $resultado = $conn->query("SELECT id, nombre FROM users");
+    while ($row = $resultado->fetch_assoc()) {
+        $usuarios[] = $row;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +35,12 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
 
 </head>
 
+<?php if (in_array($_SESSION['usuario_tipo'], [1, 4, 5])): ?>
+    <button class="btn btn-success" id="abrirModalAdmin">Crear Cita para Usuario</button>
+<?php endif; ?>
+
 <body>
+    
     <?php include 'includes/header.php'; ?>
     <div class="container">
 
@@ -66,6 +81,42 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
                 </div>
             </div>
         </div>
+
+        <!--Modal para admin-->
+        <?php if (in_array($_SESSION['usuario_tipo'], [1, 4, 5])): ?>
+        <div id="modalCitaAdmin" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Crear Cita para un Usuario</h3>
+                <form class="form" id="formCitaAdmin">
+                    <div class="form-group">
+                        <label for="usuario_id">Seleccionar Usuario:</label>
+                        <select id="usuario_id" required>
+                            <option value="">-- Selecciona --</option>
+                            <?php foreach ($usuarios as $usuario): ?>
+                                <option value="<?= $usuario['id'] ?>"><?= htmlspecialchars($usuario['nombre']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Título:</label>
+                        <input type="text" id="titulo_admin" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Link Cliente:</label>
+                        <textarea id="descripcion_admin"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha y Hora:</label>
+                        <input type="datetime-local" id="fecha_hora_admin" required>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Guardar Cita">
+                </form>
+                <button type="button" class="btn btn-light" id="cancelar_admin">Cancelar</button>
+            </div>
+        </div>
+        <?php endif; ?>
+
     </div>
 
     <!-- FullCalendar JS -->
@@ -125,9 +176,9 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
             const ahora = obtenerHoraBogota(new Date());
 
             $('#calendar').fullCalendar('clientEvents', function (event) {
-                if (!event.start || !event.id || event.notificado == 1) return false;
+                if (!event.real || !event.id || event.notificado == 1) return false;
 
-                const inicio = obtenerHoraBogota(new Date(event.start));
+                const inicio = obtenerHoraBogota(new Date(event.real));
                 const diferenciaMin = (inicio - ahora) / 60000;
 
                 console.log(`⏱️ Evento "${event.title}" comienza en: ${inicio}`);
@@ -268,7 +319,6 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
                     });
                 },
 
-                //Eliminar
                 eventRender: function (event, element) {
                     element.hover(
                         function (e) {
@@ -306,7 +356,6 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
                         }
                     );
                 },
-                //Eliminar
 
                 select: function (start, end) {
                     // Mostrar el modal con la fecha seleccionada
@@ -422,6 +471,54 @@ $archivo_eventos = ($_SESSION['usuario_tipo'] == 1) ? 'eventos_admin.php' : 'eve
             });
         });
     </script>
+
+
+
+    <script>
+    $(document).ready(function () {
+        // Mostrar modal de admin manualmente (puedes ligarlo a un botón)
+        $('#abrirModalAdmin').on('click', function () {
+            $('#modalCitaAdmin').show();
+        });
+
+        // Cerrar el modal
+        $('#cancelar_admin, #modalCitaAdmin .close').on('click', function () {
+            $('#modalCitaAdmin').hide();
+            $('#formCitaAdmin')[0].reset();
+        });
+
+        // Enviar cita del admin
+        $('#formCitaAdmin').on('submit', function (e) {
+            e.preventDefault();
+
+            const citaData = {
+                usuario_id: $('#usuario_id').val(),
+                titulo: $('#titulo_admin').val(),
+                descripcion: $('#descripcion_admin').val(),
+                fecha_hora: new Date($('#fecha_hora_admin').val()).toISOString()
+            };
+
+            $.ajax({
+                url: 'eventos_admin.php',
+                method: 'POST',
+                data: {
+                    action: 'crear_admin',
+                    ...citaData
+                },
+                success: function (response) {
+                    alert('Cita creada correctamente');
+                    $('#modalCitaAdmin').hide();
+                    $('#calendar').fullCalendar('refetchEvents');
+                },
+                error: function () {
+                    alert('Error al crear la cita');
+                }
+            });
+        });
+    });
+    </script>
+
+
 
 </body>
 
