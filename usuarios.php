@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['
             echo "<p>Error: El usuario o la extensión ya están en uso. Por favor, elige valores diferentes.</p>";
         } else {
             // Insertar nuevo usuario
-            $query_insert = "INSERT INTO users (nombre, usuario, contraseña, ext, tipo) VALUES (?, ?, ?, ?, ?)";
+            $query_insert = "INSERT INTO users (nombre, usuario, contraseña, ext, tipo, Grupo) VALUES (?, ?, ?, ?, ?, '0')";
             $stmt = $conn->prepare($query_insert);
             $stmt->bind_param('ssssi', $nombre, $usuario, $contraseña, $ext, $tipo);
 
