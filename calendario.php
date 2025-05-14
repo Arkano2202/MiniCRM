@@ -181,6 +181,7 @@ if (in_array($_SESSION['usuario_tipo'], [1, 4, 5])) {
                 const inicio = obtenerHoraBogota(new Date(event.real));
                 const diferenciaMin = (inicio - ahora) / 60000;
 
+                console.log('entro 2');
                 console.log(`⏱️ Evento "${event.title}" comienza en: ${inicio}`);
                 console.log(`⏱️ Hora actual: ${ahora}`);
                 console.log(`Diferencia en minutos: ${diferenciaMin}`);
