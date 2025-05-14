@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contrasena_hashed = password_hash($contrasena, PASSWORD_BCRYPT);
 
     // Insertar en la tabla users
-    $query = "INSERT INTO users (Nombre, Usuario, Contraseña, Ext, Tipo) VALUES (?, ?, ?, ?, ?)";
+    $query = "INSERT INTO users (Nombre, Usuario, Contraseña, Ext, Tipo, Grupo) VALUES (?, ?, ?, ?, ?,'0')";
     $stmt = mysqli_prepare($conn, $query);
 
     if (!$stmt) {

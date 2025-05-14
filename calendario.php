@@ -234,6 +234,7 @@ if (in_array($_SESSION['usuario_tipo'], [1, 4, 5])) {
                     });
                 }
             }
+            console.log(`Entro`);
             // Ejecutar verificación cada minuto
             setInterval(verificarNotificaciones, 60000);
         });
